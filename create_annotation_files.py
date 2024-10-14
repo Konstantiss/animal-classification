@@ -79,14 +79,14 @@ farfalla_test.to_csv("farfalla_test.csv")
 farfalla_val.to_csv("farfalla_val.csv")
 
 train_df = pd.concat([scoiattolo_train, pecora_train, elefante_train, mucca_train, farfalla_train], ignore_index=True)
-train_df['class'] = train_df['class'].replace({'scoiattolo':1, 'pecora':2, 'elefante':3, 'mucca':4, 'farfalla':5})
+train_df['class'] = train_df['class'].replace({'scoiattolo':0, 'pecora':1, 'elefante':2, 'mucca':3, 'farfalla':4})
 train_df.to_csv("train.csv")
 
 test_df = pd.concat([scoiattolo_test, pecora_test, elefante_test, mucca_test, farfalla_test], ignore_index=True)
-test_df['class'] = test_df['class'].replace({'scoiattolo':1, 'pecora':2, 'elefante':3, 'mucca':4, 'farfalla':5})
+test_df['class'] = test_df['class'].replace({'scoiattolo':0, 'pecora':1, 'elefante':2, 'mucca':3, 'farfalla':4})
 test_df.to_csv("test.csv")
 
 val_df = pd.concat([scoiattolo_val, pecora_val, elefante_val, mucca_val, farfalla_val], ignore_index=True)
-val_df['class'] = val_df['class'].replace({'scoiattolo':1, 'pecora':2, 'elefante':3, 'mucca':4, 'farfalla':5})
+val_df['class'] = val_df['class'].replace({'scoiattolo':0, 'pecora':1, 'elefante':2, 'mucca':3, 'farfalla':4})
 val_df.to_csv("val.csv")
 

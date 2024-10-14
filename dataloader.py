@@ -30,7 +30,6 @@ class AnimalsDataset(Dataset):
         toTensor = transforms.ToTensor()
         image = toTensor(image)
         image = torchvision.transforms._functional_tensor.convert_image_dtype(image, torch.float32)
-        #image = torchvision.transforms.functional_tensor.convert_image_dtype(image, torch.float32)
         if PLOT_IMAGES:
             pass
         if self.image_transformation:
