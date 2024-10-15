@@ -51,7 +51,7 @@ optimizer = torch.optim.SGD(model.parameters(), lr=LEARNING_RATE, weight_decay=0
 
 start_time = time.time()
 
-mean_loss_per_epoch_test, mean_accuracy_per_epoch_test, true_classes, predicted_classes = test(
+mean_loss_per_epoch_test, mean_accuracy_per_epoch_test, true_classes, predicted_classes, predicted_probabilities = test(
     model, test_dataloader, loss_fn, optimizer, device, EPOCHS)
 
 execution_time = (time.time() - start_time) / 60
@@ -96,4 +96,10 @@ print("F1 score for each class: [scoiattolo, pecora, elefante, mucca, farfalla]"
 print(f1_score(true_classes, predicted_classes, average=None))
 print("F1 score (macro):")
 print(f1_score(true_classes, predicted_classes, average='macro'))
+print("Micro-averaged One-vs-Rest ROC AUC score:")
+print(roc_auc_score(true_classes, predicted_probabilities, multi_class="ovr", average="micro"))
+print("Macro-averaged One-vs-Rest ROC AUC score:")
+print(roc_auc_score(true_classes, predicted_probabilities, multi_class="ovr", average="macro"))
+print("One-vs-Rest ROC AUC score for each class:")
+print(roc_auc_score(true_classes, predicted_probabilities, multi_class="ovr", average=None))
 

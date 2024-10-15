@@ -8,6 +8,7 @@ BATCH_SIZE = 16
 def test(model, test_dataloader, loss_fn, optimizer, device, epochs):
     true_classes = []
     predicted_classes = []
+    predicted_probabilities = []
     mean_loss_per_epoch_test = []
     mean_accuracy_per_epoch_test = []
 
@@ -28,6 +29,7 @@ def test(model, test_dataloader, loss_fn, optimizer, device, epochs):
             predictions = outputs.argmax(dim=1, keepdim=True).squeeze()
             true_classes.extend(target_classes.tolist())
             predicted_classes.extend(predictions.tolist())
+            predicted_probabilities.extend(outputs.tolist())
             correct = (predictions == target_classes).sum().item()
             accuracy = correct / BATCH_SIZE
             accuracies_per_epoch_test.append(accuracy)
@@ -47,4 +49,4 @@ def test(model, test_dataloader, loss_fn, optimizer, device, epochs):
     mean_loss_per_epoch_test.append(current_epoch_loss_test)
     mean_accuracy_per_epoch_test.append(current_epoch_accuracy_test)
 
-    return mean_loss_per_epoch_test, mean_accuracy_per_epoch_test, true_classes, predicted_classes
+    return mean_loss_per_epoch_test, mean_accuracy_per_epoch_test, true_classes, predicted_classes, predicted_probabilities

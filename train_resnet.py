@@ -50,7 +50,6 @@ val_dataloader = DataLoader(val_dataset, BATCH_SIZE, shuffle=True)
 model = ResNet18().to(device)
 
 loss_fn = nn.CrossEntropyLoss()
-#optimizer = torch.optim.SGD(model.parameters(), lr=LEARNING_RATE, weight_decay=0.01, momentum=0.8)
 optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
 start_time = time.time()
@@ -69,7 +68,7 @@ results = {
     "train_loss": mean_loss_per_epoch_train,
     "train_accuracy": mean_accuracy_per_epoch_train,
     "val_loss": mean_loss_per_epoch_val,
-    "val_accuracy":mean_accuracy_per_epoch_val,
+    "val_accuracy": mean_accuracy_per_epoch_val,
     "datetime": datetime.datetime.now(),
     "execution_time": execution_time
 }
