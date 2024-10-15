@@ -51,8 +51,22 @@ optimizer = torch.optim.SGD(model.parameters(), lr=LEARNING_RATE, weight_decay=0
 
 start_time = time.time()
 
-mean_loss_per_epoch_test, mean_accuracy_per_epoch_test, true_classes, predicted_classes, predicted_probabilities = test(
+mean_loss_per_epoch_test, mean_accuracy_per_epoch_test, true_classes, predicted_classes, predicted_probabilities, all_feature_maps = test(
     model, test_dataloader, loss_fn, optimizer, device, EPOCHS)
+
+classes = ['scoiattolo', 'pecora', 'elefante', 'mucca', 'farfalla']
+colors = ['Greys', 'Purples', 'Greens', 'Oranges', 'Reds']
+for index, (feature_map, true_class) in enumerate(zip(all_feature_maps, true_classes)):
+
+    gray_scale = torch.sum(torch.tensor(feature_map), 0)
+    gray_scale = gray_scale / len(feature_map)
+    fig = plt.figure()
+    imgplot = plt.imshow(gray_scale, cmap=colors[true_class])
+    plt.axis("off")
+    plt.title(classes[true_class])
+    plt.savefig('./feature-maps/' + str(index) + '.png')
+    plt.close()
+    all_feature_maps.remove(feature_map)
 
 execution_time = (time.time() - start_time) / 60
 date_time = str(datetime.datetime.now())

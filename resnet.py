@@ -1,5 +1,7 @@
 import torch.nn as nn
 
+RETURN_FEATURE_MAPS = True
+
 class block(nn.Module):
     def __init__(
         self, in_channels, intermediate_channels, identity_downsample=None, stride=1
@@ -89,12 +91,17 @@ class ResNet(nn.Module):
         x = self.layer3(x)
         x = self.layer4(x)
 
+        feature_map = x
+
         x = self.avgpool(x)
         x = x.reshape(x.shape[0], -1)
         x = self.fc(x)
         x = self.out(x)
 
-        return x
+        if RETURN_FEATURE_MAPS:
+            return x, feature_map
+        else:
+            return x
 
     def _make_layer(self, block, num_residual_blocks, intermediate_channels, stride):
         identity_downsample = None

@@ -11,6 +11,7 @@ def test(model, test_dataloader, loss_fn, optimizer, device, epochs):
     predicted_probabilities = []
     mean_loss_per_epoch_test = []
     mean_accuracy_per_epoch_test = []
+    all_feature_maps = []
 
     print("Model: ", model.__class__.__name__)
     model = model.to(device)
@@ -25,11 +26,13 @@ def test(model, test_dataloader, loss_fn, optimizer, device, epochs):
             tepoch.set_description(f"Epoch {1}")
             images = images.to(device)
             target_classes = target_classes.to(device)
-            outputs = model(images)
+            outputs, feature_maps = model(images)
             predictions = outputs.argmax(dim=1, keepdim=True).squeeze()
             true_classes.extend(target_classes.tolist())
             predicted_classes.extend(predictions.tolist())
             predicted_probabilities.extend(outputs.tolist())
+            feature_maps = feature_maps.cpu()
+            all_feature_maps.extend(feature_maps.tolist())
             correct = (predictions == target_classes).sum().item()
             accuracy = correct / BATCH_SIZE
             accuracies_per_epoch_test.append(accuracy)
@@ -39,6 +42,8 @@ def test(model, test_dataloader, loss_fn, optimizer, device, epochs):
             loss.backward(retain_graph=True)
             optimizer.step()
             tepoch.set_postfix(loss=loss.item(), accuracy=accuracy)
+            del feature_maps
+            torch.cuda.empty_cache()
 
     current_epoch_loss_test = sum(losses_per_epoch_test) / len(losses_per_epoch_test)
     current_epoch_accuracy_test = sum(accuracies_per_epoch_test) / len(accuracies_per_epoch_test)
@@ -49,4 +54,4 @@ def test(model, test_dataloader, loss_fn, optimizer, device, epochs):
     mean_loss_per_epoch_test.append(current_epoch_loss_test)
     mean_accuracy_per_epoch_test.append(current_epoch_accuracy_test)
 
-    return mean_loss_per_epoch_test, mean_accuracy_per_epoch_test, true_classes, predicted_classes, predicted_probabilities
+    return mean_loss_per_epoch_test, mean_accuracy_per_epoch_test, true_classes, predicted_classes, predicted_probabilities, all_feature_maps
