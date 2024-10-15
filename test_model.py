@@ -1,11 +1,9 @@
-from torch.optim.lr_scheduler import ReduceLROnPlateau
 from tqdm import tqdm
 import torch
 
 BATCH_SIZE = 16
 
-
-def test(model, test_dataloader, loss_fn, optimizer, device, epochs):
+def test(model, test_dataloader, loss_fn, device, epochs):
     true_classes = []
     predicted_classes = []
     predicted_probabilities = []
@@ -20,7 +18,6 @@ def test(model, test_dataloader, loss_fn, optimizer, device, epochs):
 
     losses_per_epoch_test = []
     accuracies_per_epoch_test = []
-    print("Learning rate: ", optimizer.param_groups[0]['lr'])
     with tqdm(test_dataloader, unit="batch", total=len(test_dataloader)) as tepoch:
         for images, target_classes in tepoch:
             tepoch.set_description(f"Epoch {1}")
@@ -38,9 +35,6 @@ def test(model, test_dataloader, loss_fn, optimizer, device, epochs):
             accuracies_per_epoch_test.append(accuracy)
             loss = loss_fn(outputs, target_classes)
             losses_per_epoch_test.append(loss.item())
-            optimizer.zero_grad()
-            loss.backward(retain_graph=True)
-            optimizer.step()
             tepoch.set_postfix(loss=loss.item(), accuracy=accuracy)
             del feature_maps
             torch.cuda.empty_cache()

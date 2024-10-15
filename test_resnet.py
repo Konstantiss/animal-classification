@@ -1,6 +1,4 @@
-import torchvision.models as models
 from torchvision.transforms import transforms
-from torch import nn
 import torch
 from test_model import test
 from dataloader import *
@@ -12,12 +10,9 @@ import datetime
 import pickle
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
-from torcheval.metrics.functional import multiclass_f1_score
 from sklearn.metrics import f1_score, precision_score, recall_score, roc_auc_score
 
 BATCH_SIZE = 16
-EPOCHS = 15
-LEARNING_RATE = 10 ** -5
 
 test_transforms = transforms.Compose([
     transforms.Resize((224, 224)),
@@ -35,9 +30,7 @@ print("Pytorch running on:", device)
 
 RESULTS_DIR = './results/'
 
-annotations_file_path_train = './train.csv'
 annotations_file_path_test = './test.csv'
-annotations_file_path_val = './val.csv'
 
 test_dataset = AnimalsDataset(annotations_file_path_test, device, image_transformation=test_transforms)
 test_dataloader = DataLoader(test_dataset, BATCH_SIZE, shuffle=True)
@@ -57,7 +50,6 @@ mean_loss_per_epoch_test, mean_accuracy_per_epoch_test, true_classes, predicted_
 classes = ['scoiattolo', 'pecora', 'elefante', 'mucca', 'farfalla']
 colors = ['Greys', 'Purples', 'Greens', 'Oranges', 'Reds']
 for index, (feature_map, true_class) in enumerate(zip(all_feature_maps, true_classes)):
-
     gray_scale = torch.sum(torch.tensor(feature_map), 0)
     gray_scale = gray_scale / len(feature_map)
     fig = plt.figure()
@@ -86,8 +78,6 @@ print("Mean test accuracy per epoch:", mean_accuracy_per_epoch_test)
 results_filename = './results-resnet-test' + date_time + '-' + str(EPOCHS) + '.pkl'
 with open(results_filename, 'wb') as handle:
     pickle.dump(results, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-classes = ['scoiattolo', 'pecora', 'elefante', 'mucca', 'farfalla']
 
 confusion_matrix = confusion_matrix(true_classes, predicted_classes)
 dataframe_confusion_matrix = pd.DataFrame(confusion_matrix / np.sum(confusion_matrix, axis=1)[:, None],

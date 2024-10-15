@@ -1,6 +1,4 @@
-import torchvision.models as models
 from torchvision.transforms import transforms
-from torch import nn
 from train_and_validate_model import train_validate
 from dataloader import *
 from resnet import *
@@ -10,7 +8,7 @@ import pickle
 import matplotlib.pyplot as plt
 
 BATCH_SIZE = 16
-EPOCHS = 6
+EPOCHS = 15
 LEARNING_RATE = 10 ** -5
 
 training_transforms = transforms.Compose([
